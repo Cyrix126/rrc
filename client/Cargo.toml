@@ -1,0 +1,10 @@
+[package]
+name = "rrc-cli"
+version = "0.1.0"
+edition = "2024"
+authors = ["cyrix126 <cyrix126@baermail.fr>"]
+description = "Rust Rakuten Client CLI"
+documentation = "https://github.com/cyrix126/rrc"
+
+[dependencies]
+rrc-lib = {path = "../lib"}
