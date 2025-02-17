@@ -66,7 +66,7 @@ impl RakutenClient {
     /// export all the products of the seller
     ///
     /// <https://outils.fr.shopping.rakuten.com/dev-pro/fr/documentation/Gestion_de_stock/Export_d_inventaire_Export_Rakuten_France_Webservices.html>
-    pub async fn export(&self) -> Result<Vec<Advert>, ExportError> {
+    pub fn export(&self) -> Result<Vec<Advert>, ExportError> {
         // uri of the export action including authentication
         let url = format!(
             "https://{API_DOMAIN}/{API_ENDPOINT_STOCK}?action=export&login={}&pwd={}&version={VERSION_EXPORT}",
@@ -74,23 +74,27 @@ impl RakutenClient {
         );
         // get the first page
         // about 4 seconds per full page, thanks Rakuten ?
-        let first_page = self.request_export(&url).await?;
+        let first_page = self.request_export(&url)?;
         let mut nexttoken = first_page.nexttoken().clone();
         let mut products = first_page.products();
         while let Some(token) = nexttoken {
             let new_url = format!("{url}&nexttoken={token}");
-            let page = self.request_export(&new_url).await?;
+            let page = self.request_export(&new_url)?;
             nexttoken = page.nexttoken().clone();
-
+            dbg!(&nexttoken);
             products.extend_from_slice(&page.products());
         }
         Ok(products)
     }
 
-    async fn request_export(&self, url: &str) -> Result<Export, ExportError> {
-        let rep_body = self.client.get(url).send().await?.text().await?;
+    fn request_export(&self, url: &str) -> Result<Export, ExportError> {
+        let mut rep_body = self.client.get(url).send()?.text()?;
         let conf_quickxml =
             quickxml_to_serde::Config::new_with_custom_values(true, "", "txt", NullValue::Null);
+        rep_body = rep_body
+            .chars()
+            .filter(|c| !c.is_control())
+            .collect::<String>();
         Ok(serde_json::from_value::<Export>(xml_string_to_json(
             rep_body,
             &conf_quickxml,

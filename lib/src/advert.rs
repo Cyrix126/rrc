@@ -1,6 +1,7 @@
 use derive_more::Display;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
+use serde_this_or_that::as_opt_string;
 use thiserror::Error;
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
@@ -8,6 +9,7 @@ use thiserror::Error;
 pub struct Advert {
     pub advertid: i64,
     pub adverttype: String,
+    #[serde(default, deserialize_with = "as_opt_string")]
     pub comment: Option<String>,
     #[serde(skip)]
     pub rich_description: Option<String>,
@@ -23,11 +25,13 @@ pub struct Advert {
     pub quality: Quality,
     pub shippingcost: Option<Shippingcost>,
     #[serde(default)]
-    pub shippingtype: ShippingType,
+    pub shippingtype: Option<ShippingType>,
+    #[serde(default, deserialize_with = "as_opt_string")]
     pub sku: Option<String>,
     pub stock: i64,
     pub unlimitedquantity: bool,
     pub importtag: Option<String>,
+    #[serde(default, deserialize_with = "as_opt_string")]
     pub privatecomment: Option<String>,
 }
 
@@ -42,13 +46,19 @@ pub struct Price {
 #[serde(rename_all = "camelCase")]
 pub struct Productsummary {
     pub alias: String,
+    #[serde(default, deserialize_with = "as_opt_string")]
     pub barcode: Option<String>,
+    #[serde(default, deserialize_with = "as_opt_string")]
     pub caption: Option<String>,
+    #[serde(default, deserialize_with = "as_opt_string")]
     pub digest: Option<String>,
+    #[serde(default, deserialize_with = "as_opt_string")]
     pub headline: Option<String>,
     pub productid: i64,
+    #[serde(default, deserialize_with = "as_opt_string")]
     pub topic: Option<String>,
     pub url: String,
+    #[serde(default, deserialize_with = "as_opt_string")]
     pub isbn: Option<String>,
     #[serde(skip)]
     pub weight_g: Option<u32>,
@@ -96,7 +106,7 @@ pub enum Quality {
     Good,
     #[display("EC")]
     #[serde(rename(serialize = "EC"))]
-    #[serde(rename(deserialize = "CORRECT"))]
+    #[serde(rename(deserialize = "ACCEPTABLE"))]
     Correct,
 }
 
