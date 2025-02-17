@@ -7,6 +7,18 @@ edition = "2024"
 path = "src/lib.rs"
 
 [dependencies]
+## HTTP client
+reqwest = {version="0.12", features=["json", "multipart"]}
+derive_builder = {version="0.20", features=["clippy"]}
+## Convert Rakuten XML responses into JSON
+quickxml_to_serde = {git = "https://github.com/Cyrix126/quickxml_to_serde",  branch = "roxml"}
+serde = { version = "1", default-features = false, features = ["serde_derive"]}
+serde_json = "1.0"
+## Errors
+thiserror = "2"
+roxmltree = "0.20"
+## Misc
+derive_more = {version="2.0", features=["display"]}
 
 [features]
 default=[]
