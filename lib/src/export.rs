@@ -7,6 +7,36 @@ use serde::Deserialize;
 
 use crate::client::RakutenClient;
 
+pub const HEADERS_CSV: [&str; 27] = [
+    "advertid",
+    "adverttype",
+    "comment",
+    "isnegotiable",
+    "isoriginal",
+    "isrefurbished",
+    "isrsl",
+    "amount",
+    "currency",
+    "alias",
+    "barcode",
+    "caption",
+    "digest",
+    "headline",
+    "productid",
+    "topic",
+    "url",
+    "isbn",
+    "quality",
+    "shipping_amount",
+    "shipping_currency",
+    "shipping_type",
+    "sku",
+    "stock",
+    "unlimitedquantity",
+    "importtag",
+    "privatecomment",
+];
+
 #[derive(Default, Debug, Clone, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Export {
@@ -81,7 +111,6 @@ impl RakutenClient {
             let new_url = format!("{url}&nexttoken={token}");
             let page = self.request_export(&new_url)?;
             nexttoken = page.nexttoken().clone();
-            dbg!(&nexttoken);
             products.extend_from_slice(&page.products());
         }
         Ok(products)
@@ -95,9 +124,8 @@ impl RakutenClient {
             .chars()
             .filter(|c| !c.is_control())
             .collect::<String>();
-        Ok(serde_json::from_value::<Export>(xml_string_to_json(
-            rep_body,
-            &conf_quickxml,
-        )?)?)
+        let export =
+            serde_json::from_value::<Export>(xml_string_to_json(rep_body, &conf_quickxml)?)?;
+        Ok(export)
     }
 }
