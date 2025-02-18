@@ -10,6 +10,11 @@ documentation = "https://github.com/cyrix126/rrc"
 name = "update_price_global"
 path = "src/bin/update_price_global.rs"
 
+
+[[bin]]
+name = "export_csv"
+path = "src/bin/export_csv.rs"
+
 [dependencies]
 rrc-lib = {path = "../lib"}
 clap = {version="4.5", features=["derive"]}
@@ -17,3 +22,4 @@ confy = "0.6"
 serde = { version = "1", default-features = false, features = ["serde_derive"]}
 reqwest = {version = "0.12"}
 get_pass = {git="https://github.com/Cyrix126/get_pass"}
+csv = "1"
