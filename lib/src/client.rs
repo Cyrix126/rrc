@@ -1,10 +1,11 @@
 use derive_builder::Builder;
+use get_pass::get_password;
 use reqwest::{
     Error,
     blocking::{Client, ClientBuilder},
 };
 
-use crate::seller::SellerInfo;
+use crate::{config::Config, seller::SellerInfo};
 
 /// The Client to use to interact with Rakuten API or directly with the website.
 ///
@@ -42,5 +43,30 @@ impl RakutenClientBuilder {
         let client = value.redirect(reqwest::redirect::Policy::none()).build()?;
         self.client = Some(client);
         Ok(self)
+    }
+}
+
+impl TryFrom<Config> for RakutenClient {
+    type Error = Box<dyn std::error::Error>;
+
+    fn try_from(config: Config) -> Result<Self, Self::Error> {
+        let mut builder = RakutenClientBuilder::default().client(ClientBuilder::new())?;
+
+        builder.token(get_password(&config.token)?);
+        builder.username(config.username);
+
+        if let Some(update_price_pf_nb) = config.update_price_pf_nb {
+            builder.update_price_pf_nb(update_price_pf_nb);
+        }
+        if let Some(fast_update_pf_nb) = config.fast_update_pf_nb {
+            builder.fast_update_pf_nb(fast_update_pf_nb);
+        }
+        if let Some(update_shipping_pf_nb) = config.update_shipping_pf_nb {
+            builder.update_shipping_pf_nb(update_shipping_pf_nb);
+        }
+        if let Some(seller_info) = config.seller_info {
+            builder.seller_info(seller_info);
+        }
+        Ok(builder.build()?)
     }
 }

@@ -10,3 +10,5 @@ pub mod export;
 pub mod import;
 // data related to the seller
 pub mod seller;
+// configuration file
+pub mod config;

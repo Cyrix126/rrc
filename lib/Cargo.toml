@@ -20,6 +20,8 @@ thiserror = "2"
 roxmltree = "0.20"
 ## Misc
 derive_more = {version="2.0", features=["display"]}
+## Config
+get_pass = {git = "https://github.com/Cyrix126/get_pass"}
 
 [features]
 default=[]

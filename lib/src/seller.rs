@@ -1,6 +1,7 @@
 use derive_builder::Builder;
+use serde::{Deserialize, Serialize};
 
-#[derive(Default, Builder, Clone)]
+#[derive(Default, Builder, Clone, Serialize, Deserialize)]
 pub struct SellerInfo {
     // can only include 0123456789
     // must ne a string since it can began with 0
