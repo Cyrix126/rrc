@@ -1,6 +1,8 @@
-// product
+// new advert to import
 pub mod advert;
-// HTTP client to interact with Raluten
+// product that already exist on Rakuten
+pub mod product;
+// HTTP client to interact with Rakuten
 pub mod client;
 // defined value by Rakuten
 pub(crate) mod constants;
@@ -12,3 +14,9 @@ pub mod import;
 pub mod seller;
 // configuration file
 pub mod config;
+// new orders
+pub mod order;
+// sales as exported
+pub mod sales;
+// definition of a customer
+pub mod customer;
